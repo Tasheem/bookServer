@@ -1,12 +1,13 @@
 package main
 
 import (
-	"bookServer/models"
-	"bookServer/services"
 	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
+
+	"github.com/Tasheem/bookServer/models"
+	"github.com/Tasheem/bookServer/services"
 )
 
 func getBooks(res http.ResponseWriter, req *http.Request) {

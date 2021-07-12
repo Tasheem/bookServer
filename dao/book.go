@@ -1,16 +1,17 @@
 package dao
 
 import (
-	"bookServer/models"
 	"database/sql"
 	"fmt"
+
+	"github.com/Tasheem/bookServer/models"
 	"github.com/google/uuid"
 )
 
 var (
 	username = "root"
 	password = "colts1810"
-	address = "127.0.0.1:3306"
+	address  = "127.0.0.1:3306"
 )
 
 func createDBIfDoesNotExist() error {
@@ -23,19 +24,19 @@ func createDBIfDoesNotExist() error {
 	}
 	defer db.Close()
 
-	_,err = db.Exec("CREATE DATABASE IF NOT EXISTS BookStore;")
+	_, err = db.Exec("CREATE DATABASE IF NOT EXISTS BookStore;")
 	if err != nil {
 		fmt.Println(err)
 		return err
 	}
 
-	_,err = db.Exec("USE BookStore")
+	_, err = db.Exec("USE BookStore")
 	if err != nil {
 		fmt.Println(err)
 		return err
 	}
 
-	_,err = db.Exec("CREATE TABLE IF NOT EXISTS books(" +
+	_, err = db.Exec("CREATE TABLE IF NOT EXISTS books(" +
 		"id varchar(36) NOT NULL," +
 		"name varchar(100)," +
 		"author_first_name varchar(100)," +

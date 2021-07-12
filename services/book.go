@@ -1,9 +1,10 @@
 package services
 
 import (
-	"bookServer/dao"
-	"bookServer/models"
 	"fmt"
+
+	"github.com/Tasheem/bookServer/dao"
+	"github.com/Tasheem/bookServer/models"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/google/uuid"
 )
