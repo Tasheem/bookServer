@@ -1,14 +1,16 @@
 package models
 
+import "github.com/google/uuid"
+
 type Book struct {
-	Id int
+	Id uuid.UUID
 	Name string
 	AuthorFirstName string
 	AuthorLastName string
 	Price float64
 }
 
-func NewBook(id int, price float64, name, authorFName, authorLName string) *Book {
+func NewBook(id uuid.UUID, price float64, name, authorFName, authorLName string) *Book {
 	var book *Book = new(Book)
 	book.Id = id
 	book.Price = price

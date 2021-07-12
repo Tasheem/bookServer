@@ -10,12 +10,16 @@ import (
 )
 
 func getBooks(res http.ResponseWriter, req *http.Request) {
-	books := services.GetAllBooks()
+	fmt.Printf("Request Origin: %s", req.RemoteAddr)
+	books, err := services.GetAllBooks()
+	if err != nil {
+		http.Error(res, "Error Fetching Books.", http.StatusInternalServerError)
+	}
 
 	res.Header().Add("Content-Type", "application/json")
-	err := json.NewEncoder(res).Encode(books)
+	err = json.NewEncoder(res).Encode(books)
 	if err != nil {
-		panic(err)
+		http.Error(res, "Invalid JSON", http.StatusBadRequest)
 	}
 }
 
@@ -26,18 +30,25 @@ func postBook(res http.ResponseWriter, req *http.Request) {
 		err := json.NewDecoder(req.Body).Decode(&b)
 
 		if err != nil {
-			fmt.Println(err)
+			http.Error(res, "Invalid JSON", http.StatusBadRequest)
+			return
 		}
 	} else {
 		http.Error(res, "Invalid Media Type", http.StatusUnsupportedMediaType)
+		return
 	}
 
 	go func() {
 		fmt.Printf("JSON Object: %v\n", b)
 	}()
 
-	services.CreateBook(b)
-	res.Write([]byte("Endpoint Reached"))
+	err := services.CreateBook(b)
+	if err != nil {
+		http.Error(res, "Error Creating Book.", http.StatusInternalServerError)
+		return
+	} else {
+		res.Write([]byte("Book Successfully Created."))
+	}
 }
 
 func handleBooks(res http.ResponseWriter, req *http.Request) {

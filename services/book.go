@@ -3,17 +3,17 @@ package services
 import (
 	"bookServer/dao"
 	"bookServer/models"
+	"fmt"
 	_ "github.com/go-sql-driver/mysql"
-	"math/rand"
+	"github.com/google/uuid"
 )
 
-func GetAllBooks() []models.Book {
-	books := dao.QueryAllBooks()
-
-	return books
+func GetAllBooks() ([]models.Book, error) {
+	return dao.QueryAllBooks()
 }
 
-func CreateBook(b models.Book) {
-	b.Id = rand.Intn(1000)
-	dao.Save(b)
+func CreateBook(b models.Book) error {
+	b.Id = uuid.New()
+	fmt.Printf("Id: %d\n", b.Id)
+	return dao.Save(b)
 }
