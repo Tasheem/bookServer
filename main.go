@@ -68,8 +68,8 @@ func root(res http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
-	http.HandleFunc("/", root)
-	http.HandleFunc("/books", handleBooks)
+	http.HandleFunc("/api", root)
+	http.HandleFunc("/api/books", handleBooks)
 	err := http.ListenAndServe(":7000", nil)
 	if err != nil {
 		log.Fatal(err)
