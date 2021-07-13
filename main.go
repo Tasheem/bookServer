@@ -14,13 +14,15 @@ func getBooks(res http.ResponseWriter, req *http.Request) {
 	fmt.Printf("Request Origin: %s", req.RemoteAddr)
 	books, err := services.GetAllBooks()
 	if err != nil {
+		fmt.Println(err)
 		http.Error(res, "Error Fetching Books.", http.StatusInternalServerError)
 	}
 
 	res.Header().Add("Content-Type", "application/json")
 	err = json.NewEncoder(res).Encode(books)
 	if err != nil {
-		http.Error(res, "Invalid JSON", http.StatusBadRequest)
+		fmt.Println(err)
+		http.Error(res, "Error Fetching Books", http.StatusInternalServerError)
 	}
 }
 
