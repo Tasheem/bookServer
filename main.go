@@ -41,9 +41,7 @@ func postBook(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	go func() {
-		fmt.Printf("JSON Object: %v\n", b)
-	}()
+	fmt.Printf("JSON Object: %v\n", b)
 
 	err := services.CreateBook(b)
 	if err != nil {
