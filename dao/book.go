@@ -132,3 +132,24 @@ func UpdatePrice(id uuid.UUID, price float64) error {
 
 	return nil
 }
+
+func DeleteBook(id string) error {
+	db, err := createDBIfDoesNotExist()
+	defer db.Close()
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	deleteStatement := fmt.Sprintf("DELETE FROM books WHERE id = \"%s\";", id)
+
+	_, err = db.Exec(deleteStatement)
+	if err != nil {
+		fmt.Println("dao->DeleteBook: Error With Delete statement")
+		fmt.Println(err)
+		fmt.Printf("Delete Statement: %s", deleteStatement)
+		return err
+	}
+
+	return nil
+}

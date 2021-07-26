@@ -22,3 +22,7 @@ func CreateBook(b models.Book) error {
 func UpdatePrice(b models.Book) error {
 	return dao.UpdatePrice(b.Id, b.Price)
 }
+
+func DeleteBook(id string) error {
+	return dao.DeleteBook(id)
+}

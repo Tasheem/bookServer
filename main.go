@@ -57,11 +57,28 @@ func updatePrice(res http.ResponseWriter, req *http.Request) {
 
 	err = services.UpdatePrice(b)
 	if err != nil {
-		http.Error(res, "Error Creating Book.", http.StatusInternalServerError)
+		http.Error(res, "Error Updating Price.", http.StatusInternalServerError)
 		return
 	}
 
 	res.Write([]byte("Book Successfully Updated."))
+}
+
+func deleteBook(res http.ResponseWriter, req *http.Request) {
+	id := req.URL.Query().Get("id")
+	fmt.Printf("ID: %s\n", id)
+	if len(id) == 0 {
+		http.Error(res, "Error with query string.", http.StatusBadRequest)
+		return
+	}
+
+	err := services.DeleteBook(id)
+	if err != nil {
+		http.Error(res, "Error Deleting Book.", http.StatusInternalServerError)
+		return
+	}
+
+	res.Write([]byte("Book Successfully Deleted."))
 }
 
 func handleBooks(res http.ResponseWriter, req *http.Request) {
@@ -89,6 +106,11 @@ func handleBooks(res http.ResponseWriter, req *http.Request) {
 			return
 		}
 		updatePrice(res, req)
+	} else if method == "DELETE" {
+		deleteBook(res, req)
+	} else {
+		http.Error(res, "Invalid Media Type", http.StatusMethodNotAllowed)
+		return
 	}
 }
 
