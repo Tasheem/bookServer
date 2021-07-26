@@ -120,7 +120,7 @@ func UpdatePrice(id uuid.UUID, price float64) error {
 		return err
 	}
 
-	update := fmt.Sprintf("UPDATE books SET price = %f WHERE id = %s;", price, id.String())
+	update := fmt.Sprintf("UPDATE books SET price = %.2f WHERE id = \"%s\";", price, id.String())
 
 	_, err = db.Exec(update)
 	if err != nil {

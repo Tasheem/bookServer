@@ -61,7 +61,7 @@ func updatePrice(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	res.Write([]byte("Book Successfully Created."))
+	res.Write([]byte("Book Successfully Updated."))
 }
 
 func handleBooks(res http.ResponseWriter, req *http.Request) {
@@ -76,7 +76,7 @@ func handleBooks(res http.ResponseWriter, req *http.Request) {
 
 	method := req.Method
 	if method == "POST" {
-		if req.Header.Get("Content-Type") == "application/json" {
+		if req.Header.Get("Content-Type") != "application/json" {
 			http.Error(res, "Invalid Media Type", http.StatusUnsupportedMediaType)
 			return
 		}
@@ -84,7 +84,7 @@ func handleBooks(res http.ResponseWriter, req *http.Request) {
 	} else if method == "GET" {
 		getBooks(res, req)
 	} else if method == "PUT" {
-		if req.Header.Get("Content-Type") == "application/json" {
+		if req.Header.Get("Content-Type") != "application/json" {
 			http.Error(res, "Invalid Media Type", http.StatusUnsupportedMediaType)
 			return
 		}
