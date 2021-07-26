@@ -2,6 +2,7 @@ package dao
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 
 	"github.com/Tasheem/bookServer/models"
@@ -122,12 +123,20 @@ func UpdatePrice(id uuid.UUID, price float64) error {
 
 	update := fmt.Sprintf("UPDATE books SET price = %.2f WHERE id = \"%s\";", price, id.String())
 
-	_, err = db.Exec(update)
+	result, err := db.Exec(update)
 	if err != nil {
 		fmt.Println("dao->UpdatePrice: Error With Update statement")
 		fmt.Println(err)
 		fmt.Printf("Update Statement: %s", update)
 		return err
+	}
+
+	if rowsAffected, err := result.RowsAffected(); rowsAffected == 0 {
+		if err != nil {
+			fmt.Println("Error thrown by RowsAffected() function.")
+			return err
+		}
+		return errors.New("row not found")
 	}
 
 	return nil

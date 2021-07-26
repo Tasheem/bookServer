@@ -20,6 +20,7 @@ func CreateBook(b models.Book) error {
 }
 
 func UpdatePrice(b models.Book) error {
+	fmt.Printf("New Price: %f", b.Price)
 	return dao.UpdatePrice(b.Id, b.Price)
 }
 

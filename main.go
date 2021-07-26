@@ -57,6 +57,10 @@ func updatePrice(res http.ResponseWriter, req *http.Request) {
 
 	err = services.UpdatePrice(b)
 	if err != nil {
+		if err.Error() == "row not found" {
+			http.Error(res, "Resource not found", http.StatusNotFound)
+			return
+		}
 		http.Error(res, "Error Updating Price.", http.StatusInternalServerError)
 		return
 	}
