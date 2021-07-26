@@ -11,7 +11,6 @@ import (
 )
 
 func getBooks(res http.ResponseWriter, req *http.Request) {
-	fmt.Printf("Request Origin: %s", req.RemoteAddr)
 	books, err := services.GetAllBooks()
 	if err != nil {
 		fmt.Println(err)
@@ -29,39 +28,80 @@ func getBooks(res http.ResponseWriter, req *http.Request) {
 func postBook(res http.ResponseWriter, req *http.Request) {
 	var b models.Book
 
-	if req.Header.Get("Content-Type") == "application/json" {
-		err := json.NewDecoder(req.Body).Decode(&b)
-
-		if err != nil {
-			http.Error(res, "Invalid JSON", http.StatusBadRequest)
-			return
-		}
-	} else {
-		http.Error(res, "Invalid Media Type", http.StatusUnsupportedMediaType)
+	err := json.NewDecoder(req.Body).Decode(&b)
+	if err != nil {
+		http.Error(res, "Invalid JSON", http.StatusBadRequest)
 		return
 	}
 
 	fmt.Printf("JSON Object: %v\n", b)
 
-	err := services.CreateBook(b)
+	err = services.CreateBook(b)
 	if err != nil {
 		http.Error(res, "Error Creating Book.", http.StatusInternalServerError)
 		return
-	} else {
-		res.Write([]byte("Book Successfully Created."))
 	}
+
+	res.Write([]byte("Book Successfully Created."))
+}
+
+// Client should send book object with updated price and existing id.
+func updatePrice(res http.ResponseWriter, req *http.Request) {
+	var b models.Book
+
+	err := json.NewDecoder(req.Body).Decode(&b)
+	if err != nil {
+		http.Error(res, "Invalid JSON", http.StatusBadRequest)
+		return
+	}
+
+	err = services.UpdatePrice(b)
+	if err != nil {
+		http.Error(res, "Error Creating Book.", http.StatusInternalServerError)
+		return
+	}
+
+	res.Write([]byte("Book Successfully Created."))
 }
 
 func handleBooks(res http.ResponseWriter, req *http.Request) {
+	/*origin := req.Header.Get("Origin")
+	fmt.Printf("Origin: %v\n", origin)
+
+	// Prevent any client from access except for authServer.
+	if origin != "localhost:4000" {
+		http.Error(res, "Unauthorized Origin", http.StatusForbidden)
+		return
+	}*/
+
 	method := req.Method
 	if method == "POST" {
+		if req.Header.Get("Content-Type") == "application/json" {
+			http.Error(res, "Invalid Media Type", http.StatusUnsupportedMediaType)
+			return
+		}
 		postBook(res, req)
 	} else if method == "GET" {
 		getBooks(res, req)
+	} else if method == "PUT" {
+		if req.Header.Get("Content-Type") == "application/json" {
+			http.Error(res, "Invalid Media Type", http.StatusUnsupportedMediaType)
+			return
+		}
+		updatePrice(res, req)
 	}
 }
 
 func root(res http.ResponseWriter, req *http.Request) {
+	/*origin := req.Header.Get("Origin")
+	fmt.Printf("Origin: %v\n", origin)
+
+	// Prevent any client from access except for authServer.
+	if origin != "localhost:4000" {
+		http.Error(res, "Unauthorized Origin", http.StatusForbidden)
+		return
+	}*/
+
 	res.Write([]byte("Book Store API"))
 }
 

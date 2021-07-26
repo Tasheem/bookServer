@@ -18,3 +18,7 @@ func CreateBook(b models.Book) error {
 	fmt.Printf("Id: %d\n", b.Id)
 	return dao.Save(b)
 }
+
+func UpdatePrice(b models.Book) error {
+	return dao.UpdatePrice(b.Id, b.Price)
+}

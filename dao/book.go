@@ -111,3 +111,24 @@ func Save(b models.Book) error {
 
 	return nil
 }
+
+func UpdatePrice(id uuid.UUID, price float64) error {
+	db, err := createDBIfDoesNotExist()
+	defer db.Close()
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	update := fmt.Sprintf("UPDATE books SET price = %f WHERE id = %s;", price, id.String())
+
+	_, err = db.Exec(update)
+	if err != nil {
+		fmt.Println("dao->UpdatePrice: Error With Update statement")
+		fmt.Println(err)
+		fmt.Printf("Update Statement: %s", update)
+		return err
+	}
+
+	return nil
+}
