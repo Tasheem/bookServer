@@ -14,26 +14,28 @@ var (
 	address  = "127.0.0.1:3306"
 )
 
-func createDBIfDoesNotExist() error {
+func createDBIfDoesNotExist() (*sql.DB, error) {
 	dataSource := fmt.Sprintf("%s:%s@tcp(%s)/", username, password, address)
 
 	db, err := sql.Open("mysql", dataSource)
 	if err != nil {
 		fmt.Println(err)
-		return err
+		db.Close()
+		return nil, err
 	}
-	defer db.Close()
 
 	_, err = db.Exec("CREATE DATABASE IF NOT EXISTS BookStore;")
 	if err != nil {
 		fmt.Println(err)
-		return err
+		db.Close()
+		return nil, err
 	}
 
 	_, err = db.Exec("USE BookStore")
 	if err != nil {
 		fmt.Println(err)
-		return err
+		db.Close()
+		return nil, err
 	}
 
 	_, err = db.Exec("CREATE TABLE IF NOT EXISTS books(" +
@@ -45,27 +47,21 @@ func createDBIfDoesNotExist() error {
 		"PRIMARY KEY (id));")
 	if err != nil {
 		fmt.Println(err)
-		return err
+		db.Close()
+		return nil, err
 	}
 
-	return nil
+	return db, nil
 }
 
 func QueryAllBooks() ([]models.Book, error) {
-	err := createDBIfDoesNotExist()
+	db, err := createDBIfDoesNotExist()
+	defer db.Close()
 	if err != nil {
 		fmt.Println(err)
 		// returning empty slice of books and the error.
 		return make([]models.Book, 0), err
 	}
-
-	dataSourceName := fmt.Sprintf("%s:%s@tcp(%s)/BookStore", username, password, address)
-	db, err := sql.Open("mysql", dataSourceName)
-	if err != nil {
-		fmt.Println(err)
-		return make([]models.Book, 0), err
-	}
-	defer db.Close()
 
 	result, err := db.Query("SELECT * FROM books")
 	if err != nil {
@@ -95,20 +91,12 @@ func QueryAllBooks() ([]models.Book, error) {
 }
 
 func Save(b models.Book) error {
-	err := createDBIfDoesNotExist()
-	if err != nil {
-		fmt.Println(err)
-		return err
-	}
-
-	dataSourceName := fmt.Sprintf("%s:%s@tcp(%s)/BookStore", username, password, address)
-	db, err := sql.Open("mysql", dataSourceName)
-	if err != nil {
-		fmt.Println("dao->Save: Error Opening SQL Connection statement")
-		fmt.Println(err)
-		return err
-	}
+	db, err := createDBIfDoesNotExist()
 	defer db.Close()
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
 
 	insert := fmt.Sprintf("INSERT INTO books VALUES (\"%s\", \"%s\", \"%s\", \"%s\", %.2f);",
 		b.Id.String(), b.Name, b.AuthorFirstName, b.AuthorLastName, b.Price)
