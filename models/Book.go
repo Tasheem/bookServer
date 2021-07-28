@@ -3,11 +3,11 @@ package models
 import "github.com/google/uuid"
 
 type Book struct {
-	Id uuid.UUID
-	Name string `json:",omitempty"`
-	AuthorFirstName string `json:",omitempty"`
-	AuthorLastName string `json:",omitempty"`
-	Price float64
+	Id uuid.UUID `json:"id"`
+	Name string `json:"name,omitempty"`
+	AuthorFirstName string `json:"authorFirstName,omitempty"`
+	AuthorLastName string `json:"authorLastName,omitempty"`
+	Price float64 `json:"price"`
 }
 
 func NewBook(id uuid.UUID, price float64, name, authorFName, authorLName string) *Book {
