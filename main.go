@@ -51,6 +51,7 @@ func updatePrice(res http.ResponseWriter, req *http.Request) {
 
 	err := json.NewDecoder(req.Body).Decode(&b)
 	if err != nil {
+		fmt.Println(err)
 		http.Error(res, "Invalid JSON", http.StatusBadRequest)
 		return
 	}

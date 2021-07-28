@@ -4,9 +4,9 @@ import "github.com/google/uuid"
 
 type Book struct {
 	Id uuid.UUID
-	Name string
-	AuthorFirstName string
-	AuthorLastName string
+	Name string `json:",omitempty"`
+	AuthorFirstName string `json:",omitempty"`
+	AuthorLastName string `json:",omitempty"`
 	Price float64
 }
 
