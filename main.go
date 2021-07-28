@@ -55,6 +55,7 @@ func updatePrice(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	fmt.Printf("Book: %v\n", b)
 	err = services.UpdatePrice(b)
 	if err != nil {
 		if err.Error() == "row not found" {
