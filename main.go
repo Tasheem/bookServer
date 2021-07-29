@@ -30,19 +30,24 @@ func postBook(res http.ResponseWriter, req *http.Request) {
 
 	err := json.NewDecoder(req.Body).Decode(&b)
 	if err != nil {
+		fmt.Println(err)
 		http.Error(res, "Invalid JSON", http.StatusBadRequest)
 		return
 	}
 
 	fmt.Printf("JSON Object: %v\n", b)
 
-	err = services.CreateBook(b)
+	id, err := services.CreateBook(b)
 	if err != nil {
+		fmt.Println(err)
 		http.Error(res, "Error Creating Book.", http.StatusInternalServerError)
 		return
 	}
 
-	res.Write([]byte("Book Successfully Created."))
+	resource := fmt.Sprintf("/api/books/id=%s", id)
+	res.Header().Set("Location", resource)
+	res.WriteHeader(http.StatusCreated)
+	res.Write([]byte("Book Successfully Created"))
 }
 
 // Client should send book object with updated price and existing id.
@@ -88,14 +93,14 @@ func deleteBook(res http.ResponseWriter, req *http.Request) {
 }
 
 func handleBooks(res http.ResponseWriter, req *http.Request) {
-	/*origin := req.Header.Get("Origin")
+	origin := req.Header.Get("Origin")
 	fmt.Printf("Origin: %v\n", origin)
 
 	// Prevent any client from access except for authServer.
 	if origin != "localhost:4000" {
 		http.Error(res, "Unauthorized Origin", http.StatusForbidden)
 		return
-	}*/
+	}
 
 	method := req.Method
 	if method == "POST" {
@@ -121,14 +126,14 @@ func handleBooks(res http.ResponseWriter, req *http.Request) {
 }
 
 func root(res http.ResponseWriter, req *http.Request) {
-	/*origin := req.Header.Get("Origin")
+	origin := req.Header.Get("Origin")
 	fmt.Printf("Origin: %v\n", origin)
 
 	// Prevent any client from access except for authServer.
 	if origin != "localhost:4000" {
 		http.Error(res, "Unauthorized Origin", http.StatusForbidden)
 		return
-	}*/
+	}
 
 	res.Write([]byte("Book Store API"))
 }

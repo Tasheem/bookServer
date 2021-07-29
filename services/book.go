@@ -13,10 +13,10 @@ func GetAllBooks() ([]models.Book, error) {
 	return dao.QueryAllBooks()
 }
 
-func CreateBook(b models.Book) error {
+func CreateBook(b models.Book) (uuid.UUID, error) {
 	b.Id = uuid.New()
 	fmt.Printf("Id: %d\n", b.Id)
-	return dao.Save(b)
+	return b.Id, dao.Save(b)
 }
 
 func UpdatePrice(b models.Book) error {
