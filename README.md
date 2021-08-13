@@ -1,0 +1,12 @@
+# Book Store - Book Service
+This service is apart of the Book Store application.  The purpose of this service is to offer CRUD functionality for the books associated with the book store.
+
+# Tools Used For This Project
+* Golang
+* SQL
+* JSON
+
+# Project Structure
+* A standard layered structure.
+  * The handler functions are in the main file.
+  * The handler functions interact with the service layer and the service layer interacts with the data access layer.
