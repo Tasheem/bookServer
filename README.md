@@ -1,5 +1,5 @@
 # Library Management System - Book Service
-This service is apart of the Book Store application.  The purpose of this service is to offer CRUD functionality for the books associated with the book store. This service only accepts requests from the Node.js authServer application.
+This service is a part of the Library Management System application.  The purpose of this service is to offer CRUD functionality for the books associated with the book store. This service only accepts requests from the Node.js authServer application.
 
 ## Tools Used For This Project
 ---
